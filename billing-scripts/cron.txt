@@ -1,0 +1,4 @@
+#
+SHELL=/bin/bash
+#
+4 4 * * * /root/dCache/billing-scripts/make_daily_transfer_sum.sh >/dev/null 2>&1

@@ -1,0 +1,5 @@
+Section           dCache/LRZ
+Interface         dCache
+Username          admin
+Port              59999
+AdminHost         localhost

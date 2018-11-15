@@ -1,0 +1,3 @@
+SHELL=/bin/sh
+PATH='/usr/sbin:/sbin:/usr/bin:/bin'
+*/15 * * * *   root    test -x /root/dCache/scripts/dcache_adjust_movers.sh && /root/dCache/scripts/dcache_adjust_movers.sh
