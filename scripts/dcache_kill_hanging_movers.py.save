@@ -17,21 +17,13 @@ def lookup_stuck_movers( a, pool, tmin = 1000 ):
 # 100678792 : RUNNING : 0000B822F235551A4A7D8320789122487ABF IoMode=[READ, WRITE, CREATE] h={SU=0;SA=0;S=None} bytes=0 time/sec=135510 LM=135510 si={atlas:DataDisk}
 
     for line in results.split('\n'):
-        nbytes = 0
-        time = 0
         if r.search( line ):
             try:
-#                fields = line.split(':')[2].split()
-#                bytes=int(fields[3].split('=')[1])
-#                time=int(fields[4].split('=')[1])
+                fields = line.split(':')[2].split()
+                bytes=int(fields[3].split('=')[1])
+                time=int(fields[4].split('=')[1])
 
-                sf = line.split()
-                bf = [ x for x in sf if x.find('bytes=')>=0 ]
-                nbytes = int(bf[0].split('=')[1])
-                tf = [ x for x in sf if x.find('time/sec=')>=0 ]
-                time = int(tf[0].split('=')[1])
-
-                if nbytes <= 0 and time>tmin:
+                if bytes <= 0 and time>tmin:
                     stuck_ids.append( line )
             except:
                 print 'Parsing trouble: ', line
