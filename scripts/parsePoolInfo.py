@@ -91,7 +91,11 @@ from xml.sax import make_parser
 # from simplehandler import ArticleHandler
 from urllib import urlopen
 
-def doParse( url ):
+def doParse( url, myqueue=None ):
+    global proto
+    if myqueue != None :
+        proto = myqueue
+
     ch = PoolHandler()
     saxparser = make_parser()
     saxparser.setContentHandler(ch)
@@ -107,8 +111,13 @@ def doParse( url ):
 
 
 if __name__ == '__main__':
+    print sys.argv
+    if len(sys.argv)>1:
+        chkqueue = sys.argv[1]
+    else:
+        chkqueue = None
 
-    poolinfo = doParse("http://lcg-lrz-dcache0.grid.lrz.de:59998/info/pools")
+    poolinfo = doParse("http://lcg-lrz-dcache0.grid.lrz.de:59998/info/pools", chkqueue)
 
     for ptag in sorted(poolinfo.keys()):
         qp =  poolinfo[ptag]

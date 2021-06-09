@@ -26,16 +26,17 @@ python dCacheTransfer-genPickle.py -f $BDIR -o BILLINGDIR $dayopts >> $fname
 # python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain,bypool,byspacetoken,bydstag -p local  >> $fname
 python dCacheTransferReport-fromPickle.py -i BILLINGDIR $dayopts >> $fname
 python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p FTP.GSI $dayopts >> $fname
-python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p DCAP.PLAIN $dayopts >> $fname
+#python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p DCAP.PLAIN $dayopts >> $fname
 python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p XROOTD $dayopts >> $fname
 python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p WEBDAV.TLS $dayopts >> $fname
+python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p REMOTETRANSFERMANAG $dayopts >> $fname
 
 echo '\n\n##########   Error  Reports   ######################' >> $fname
 python dCacheTransferErrorReport-fromPickle.py  -i BILLINGDIR $dayopts >> $fname
 #
 datestring=`/bin/date -d $day +'%F'`
 
-mv $fname /tmp/billing.txt
+/bin/mv $fname /tmp/billing.txt
 
 # mailx -a broken
 #echo ""| mailx -a /tmp/billing.txt -s "dCache Billing Stat for $datestring" Guenter.Duckeck@Physik.Uni-Muenchen.DE

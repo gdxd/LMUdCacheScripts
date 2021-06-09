@@ -14,22 +14,29 @@ DEBUG=False
 
 # LRZ specific 
 infourl = "http://lcg-lrz-dcache0.grid.lrz.de:59998/info/pools"
-NMOVERDEF = 15
+# NMOVERDEF = 15
 # increased GD Jan-18, 2018
 # back to 20 GD Jan-31, 2018
 # down to 15 GD Feb-8, 2018
 # up to 25 GD Apr-12, 2018
 # down to 15 GD Sep-19, 2018
-# NMOVERDEF = 30
-NMOVERMAX = 50
+# up to 30 GD Nov-7, 2019
+NMOVERDEF = 30
+NMOVERMAX = 200
 
 # list of pools to exclude from adjustment0
 # POOLSIGNORE = [19,32,28,999]
 # POOLSIGNORE = [28,0] # dummy
 POOLSIGNORE = [999]
+# store in dict
+POOLLOAD = {}
+
 #
 def getPoolLoad( pool ):
     # pool = lcg-lrz-dc25_2 --> lcg-lrz-dc25.grid.lrz-muenchen.de
+    if POOLLOAD.has_key(pool) :
+        return POOLLOAD[pool]
+
     load = -1
     domain = 'grid.lrz.de'
     phost = pool.split('_')[0] + '.' + domain
@@ -46,6 +53,7 @@ def getPoolLoad( pool ):
             except:
                 pass
     
+    POOLLOAD[pool] = load
     return load
 
 
@@ -127,10 +135,11 @@ def main():
                 plreset[ptag] = NMOVERDEF
             elif qp.active + qp.queued < qp.maxactive - 8:
 #                nmovernew = max( qp.active + qp.queued, NMOVERDEF )
-                nmovernew = max( qp.maxactive - 2, NMOVERDEF )
+                nmovernew = max( qp.maxactive - 5, NMOVERDEF )
                 plreset[ptag] = nmovernew
 	elif qp.maxactive < NMOVERDEF:
-	    plreset[ptag] = NMOVERDEF
+            if checkLoadOk(pool, getPoolLoad( pool )) :
+	        plreset[ptag] = NMOVERDEF
 
         # increase movers if queued movers
         if qp.queued>0 and qp.active + qp.queued > qp.maxactive and qp.maxactive < NMOVERMAX:

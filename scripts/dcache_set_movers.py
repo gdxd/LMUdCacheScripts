@@ -9,7 +9,7 @@ from dCacheAdmin import Admin, parseOpts, parse_DBParam
 def check_pool_movers( pool, nmover, queue ):
 
     # sanity check
-    minmover=5
+    minmover=2
     maxmover=200
 
     # LRZ specific 

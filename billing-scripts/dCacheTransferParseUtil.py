@@ -569,8 +569,10 @@ def PrintDomainResult(domainResults, protocol='GFTP', nlprmax = 200, sortKey=1):
   nl = 0
   for domainResultLine in sorted(domainResults, key=lambda entry: entry[sortKey], reverse=True):
     if nl<nlprmax:
-      print(format(domainResultLine[0], 35) + format("%12.3f" % domainResultLine[1], -15) + format(domainResultLine[2], -15) + format("%12.0f" % (domainResultLine[3]/1000), -15)  + format("%10.3f" % ( domainResultLine[1]*1e9/domainResultLine[3] ), -15)+' | '+ format("%12.3f" % domainResultLine[5], -15) + format("%12.3f" % domainResultLine[6], -15))
-
+      try:
+        print(format(domainResultLine[0], 35) + format("%12.3f" % domainResultLine[1], -15) + format(domainResultLine[2], -15) + format("%12.0f" % (domainResultLine[3]/1000), -15)  + format("%10.3f" % ( domainResultLine[1]*1e9/domainResultLine[3] ), -15)+' | '+ format("%12.3f" % domainResultLine[5], -15) + format("%12.3f" % domainResultLine[6], -15))
+      except Exception,x:
+        print  "PrintDomainResult Troubles: ", x.__class__.__name__ , ':', x
     nl += 1
 
     Datavolume+=domainResultLine[1]
