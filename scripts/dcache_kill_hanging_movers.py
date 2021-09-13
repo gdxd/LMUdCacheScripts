@@ -8,7 +8,7 @@ from dCacheAdmin import Admin, parseOpts, parse_DBParam
 #    "replicas exist on dCache system for logical file.  All future attempts " \
 #    "will also fail without manual operator intervention."
 
-def lookup_stuck_movers( a, pool, tmin = 1000 ):
+def lookup_stuck_movers( a, pool, tmin = 1000, maxsz = 0 ):
 
     r = re.compile('RUNNING')
     results = a.execute( pool, 'mover ls' )
@@ -31,7 +31,7 @@ def lookup_stuck_movers( a, pool, tmin = 1000 ):
                 tf = [ x for x in sf if x.find('time/sec=')>=0 ]
                 time = int(tf[0].split('=')[1])
 
-                if nbytes <= 0 and time>tmin:
+                if (maxsz<0 or nbytes <= maxsz) and time>tmin:
                     stuck_ids.append( line )
             except:
                 print 'Parsing trouble: ', line
@@ -79,6 +79,7 @@ if __name__ == '__main__':
 
   pool = givenOpts[0]
   tmin = 1000
+  maxsz = 0
 
   if 'config' in kwOpts:
       config = kwOpts['config']
@@ -93,6 +94,10 @@ if __name__ == '__main__':
   if 'tmin' in kwOpts:
      tmin = int(kwOpts['tmin'])
 
+  if 'maxsz' in kwOpts:
+     maxsz = int(kwOpts['maxsz'])
+
+
   info = parse_DBParam( config, section )
 
   try:
@@ -103,7 +108,7 @@ if __name__ == '__main__':
       print e
       sys.exit(3)
 
-  stuck_ids = lookup_stuck_movers( a, pool, tmin )
+  stuck_ids = lookup_stuck_movers( a, pool, tmin, maxsz )
  
   print_ids( stuck_ids )
   if 'k' in passedOpts:
