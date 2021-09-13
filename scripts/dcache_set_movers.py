@@ -10,7 +10,7 @@ def check_pool_movers( pool, nmover, queue ):
 
     # sanity check
     minmover=2
-    maxmover=200
+    maxmover=300
 
     # LRZ specific 
     pref='lcg-lrz-dc'

@@ -22,7 +22,7 @@ infourl = "http://lcg-lrz-dcache0.grid.lrz.de:59998/info/pools"
 # down to 15 GD Sep-19, 2018
 # up to 30 GD Nov-7, 2019
 NMOVERDEF = 30
-NMOVERMAX = 200
+NMOVERMAX = 250
 
 # list of pools to exclude from adjustment0
 # POOLSIGNORE = [19,32,28,999]
