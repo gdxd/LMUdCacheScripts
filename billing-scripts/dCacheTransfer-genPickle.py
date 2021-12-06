@@ -22,7 +22,7 @@
 
 
 
-import os, glob, datetime, time, gzip, cPickle
+import os, glob, datetime, time, gzip, pickle
 import simpleTiming
 from optparse import OptionParser
 
@@ -198,7 +198,7 @@ if __name__ == "__main__" :
           if reqObj.ok:
 #            requestList.append(reqObj)
             if reqObj.hash in requestDict:
-              print 'found request already in requestDict : ' + reqObj.hash
+              print('found request already in requestDict : ' + reqObj.hash)
             else:
               requestDict[reqObj.hash]=reqObj
           if debug >=3:
@@ -341,7 +341,7 @@ if __name__ == "__main__" :
     storeTrObjs( trsumList, outdir, str(dateDayToProcess) )
     storeTrObjs( failedTrReqList + failedRequestList, outdir, 'error-'+str(dateDayToProcess) )
 #    storeTrObjs( failedRequestList, outdir, 'error-request-'+str(dateDayToProcess) )
-    print(format('Time for storing w/ cPickle: ', 65) + format(mytimer.getdiff(), -12))
+    print(format('Time for storing w/ pickle: ', 65) + format(mytimer.getdiff(), -12))
 
   storeHostDict( host_ip_dict, '/root/dCache/billing-scripts' )
 

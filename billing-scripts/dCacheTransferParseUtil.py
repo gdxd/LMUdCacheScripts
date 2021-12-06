@@ -37,7 +37,7 @@
 # mMsg:	[pool:lcg-lrz-dc62_3@pool_lcg-lrz-dc62_3:transfer]	[pool:lcg-lrz-dc62_3@pool_lcg-lrz-dc62_3:1531139249109-174318]	[0000CB86F83D1B4D45F8AE096A0F25DF6235:Unknown]	17853472B	[atlas:DataDisk@osm]	[]	[]	[[]:[]]	[]	[0]	[0:0]	0ms	[Http-1.1:129.187.131.14:0:lcg-lrz-dc14_5:pool_lcg-lrz-dc14_5:/0000CB86F83D1B4D45F8AE096A0F25DF6235]	[pool:lcg-lrz-dc14_5@pool_lcg-lrz-dc14_5]	p2p	download	24576B	78.8MiB/s	-MiB/s	63894ms	16ms	63877ms	-ms	-ms	[Unknown]	[666:"java.io.IOException: Broken pipe"]
 
 #
-import os, glob, datetime, time, gzip, cPickle, socket
+import os, glob, datetime, time, gzip, pickle, socket
 import simpleTiming
 from optparse import OptionParser
 
@@ -234,10 +234,10 @@ class TransferObj( object ):
 
       self.ok = True
 
-    except Exception, x:
-      print  "Transfer parsing troubles: ", x.__class__.__name__ , ' : ', x, ' Line: ', line
-      print self.__dict__
-      print 'transfer[3:5]=', transfer[3:5]
+    except Exception as x:
+      print("Transfer parsing troubles: ", x.__class__.__name__ , ' : ', x, ' Line: ', line)
+      print(self.__dict__)
+      print('transfer[3:5]=', transfer[3:5])
       self.ok = False
 
 
@@ -278,7 +278,7 @@ class RequestObj( object):
       try:
         self.host=request[-4].strip('[]')
         self.File=request[-2].strip('[]')
-      except Exception, x:
+      except Exception as x:
         pass
 
 
@@ -292,8 +292,8 @@ class RequestObj( object):
       self.hash = hash(request[3].strip('[]'))
 
       self.ok = True
-    except Exception, x:
-      print  "Request parsing troubles: ", x.__class__.__name__ , ' : ', x,  ' Line: ',line
+    except Exception as x:
+      print("Request parsing troubles: ", x.__class__.__name__ , ' : ', x,  ' Line: ',line)
       self.ok = False
 
   def __str__( self ):
@@ -334,14 +334,14 @@ def getSumbyTag( tag, ititem, bynode = True ):
   try:
       tagind = tags.index(tag)
   except:
-      print 'getSumbyTag unknown tag', tag
+      print('getSumbyTag unknown tag', tag)
       return []
 
   tagResults={}
   
   while ( True ) :
     try:
-      ts = ititem.next()
+      ts = ititem.__next__()
     except StopIteration:
       break
 
@@ -362,8 +362,8 @@ def getSumbyTag( tag, ititem, bynode = True ):
             key = ts.fname.strip('/').split('/')[5]
             if key.find('atlas')<0 : # skip non-atlas entries
                 continue
-        except Exception, x:
-            #      print  "Troubles: ", x.__class__.__name__ , ':', x
+        except Exception as x:
+            #      print("Troubles: ", x.__class__.__name__ , ':', x)
             continue
 
     elif tagind == 4:
@@ -373,8 +373,8 @@ def getSumbyTag( tag, ititem, bynode = True ):
             spacetoken = ts.fname.strip('/').split('/')[5]
             if spacetoken.find('atlas')<0 : # skip non-atlas entries
                 continue
-        except Exception, x:
-            #      print  "Troubles: ", x.__class__.__name__ , ':', x
+        except Exception as x:
+            #      print("Troubles: ", x.__class__.__name__ , ':', x)
             continue
 
         # combine fname and pnfsid
@@ -389,8 +389,8 @@ def getSumbyTag( tag, ititem, bynode = True ):
                 continue
             # extract ds-name
             key = fnparts[-2]
-        except Exception, x:
-            #      print  "Troubles: ", x.__class__.__name__ , ':', x
+        except Exception as x:
+            #      print("Troubles: ", x.__class__.__name__ , ':', x)
             continue
 
     else:
@@ -407,8 +407,8 @@ def getSumbyTag( tag, ititem, bynode = True ):
               key = dstags[0]+'***'
             else:
               key = dstags[0]+'_'+dstags[4]
-        except Exception, x:
-            #      print  "Troubles: ", x.__class__.__name__ , ':', x
+        except Exception as x:
+            #      print("Troubles: ", x.__class__.__name__ , ':', x)
             continue
 
 
@@ -420,9 +420,9 @@ def getSumbyTag( tag, ititem, bynode = True ):
     try:
       sumobj = tagResults[key]
       
-    except Exception, x:
-#      print  "Troubles: ", x.__class__.__name__ , ':', x
-#      print 'Domain:',ts.domain
+    except Exception as x:
+#      print("Troubles: ", x.__class__.__name__ , ':', x)
+#      print('Domain:',ts.domain)
       sumobj =  SumObj()
       tagResults[key] = sumobj
 
@@ -465,16 +465,16 @@ def getErrorSumbyTag( tag, ititem, errorType = None, bynode = True):
   try:
     tagind = tags.index(tag)
   except:
-    print 'getSumbyTag unknown tag', tag
+    print('getSumbyTag unknown tag', tag)
     return []
 
-#  print 'getErrorSumbyTag:', tag, tagind
+#  print('getErrorSumbyTag:', tag, tagind)
 
   tagResults = {}
 
   while ( True ) :
     try:
-      (reqobj, trobj) = ititem.next()
+      (reqobj, trobj) = ititem.__next__()
     except StopIteration:
       break
 
@@ -503,10 +503,10 @@ def getErrorSumbyTag( tag, ititem, errorType = None, bynode = True):
 #        message = reqobj.line.split('{')[1]
         parts = reqobj.message.split(':')
         key = parts[0]
-      except Exception, x:
-        print  "Troubles: ", x.__class__.__name__ , ':', x
-        print reqobj.line
-        print message
+      except Exception as x:
+        print("Troubles: ", x.__class__.__name__ , ':', x)
+        print(reqobj.line)
+        print(message)
         continue
 
     elif tagind  == 3:
@@ -515,10 +515,10 @@ def getErrorSumbyTag( tag, ititem, errorType = None, bynode = True):
 #        message = reqobj.line.split('{')[1].strip()
 #        key = message[0:70]
         key = message[0:70].strip()
-      except Exception, x:
-        print  "Troubles: ", x.__class__.__name__ , ':', x
-        print reqobj.line
-        print message
+      except Exception as x:
+        print("Troubles: ", x.__class__.__name__ , ':', x)
+        print(reqobj.line)
+        print(message)
         continue
 
 
@@ -528,11 +528,11 @@ def getErrorSumbyTag( tag, ititem, errorType = None, bynode = True):
     try:
       tagResults[key] += 1
       
-    except Exception, x:
-#      print  "Troubles: ", x.__class__.__name__ , ':', x
-#      print 'Domain:',ts.domain
+    except Exception as x:
+#      print("Troubles: ", x.__class__.__name__ , ':', x)
+#      print('Domain:',ts.domain)
       tagResults[key] = 1
-#      print key, tagResults[key]
+#      print(key, tagResults[key])
       
   # convert into list
   tagResList=[]
@@ -548,16 +548,16 @@ def getErrorSumbyTag( tag, ititem, errorType = None, bynode = True):
 
 
 def storeTrObjs( trsumList, dirname, datestr ):
-  """store transfer objects in cPickle file"""
+  """store transfer objects in pickle file"""
   fname = 'dctr-'+datestr+'.cpickle.gz'
   try:
     fil=gzip.open(dirname+'/'+fname, 'wb' )
     for obj in trsumList:
-      cPickle.dump( obj, fil, protocol=2 )
+      pickle.dump( obj, fil, protocol=2 )
 
     fil.close()
-  except Exception, x:
-    print  "storeTrObjs Troubles: ", x.__class__.__name__ , ':', x
+  except Exception as x:
+    print("storeTrObjs Troubles: ", x.__class__.__name__ , ':', x)
 
 def PrintDomainResult(domainResults, protocol='GFTP', nlprmax = 200, sortKey=1):
   print(format('Domain', '35') + str('DV [GB]').center(15) + str('Transfers').center(15) + str('Duration [sec]').center(15) + str('Rate [kB/s]').center(15) +' | '+ str('write [GB]').center(15) + str('read [GB]').center(15))
@@ -571,8 +571,8 @@ def PrintDomainResult(domainResults, protocol='GFTP', nlprmax = 200, sortKey=1):
     if nl<nlprmax:
       try:
         print(format(domainResultLine[0], 35) + format("%12.3f" % domainResultLine[1], -15) + format(domainResultLine[2], -15) + format("%12.0f" % (domainResultLine[3]/1000), -15)  + format("%10.3f" % ( domainResultLine[1]*1e9/domainResultLine[3] ), -15)+' | '+ format("%12.3f" % domainResultLine[5], -15) + format("%12.3f" % domainResultLine[6], -15))
-      except Exception,x:
-        print  "PrintDomainResult Troubles: ", x.__class__.__name__ , ':', x
+      except Exception as x:
+        print("PrintDomainResult Troubles: ", x.__class__.__name__ , ':', x)
     nl += 1
 
     Datavolume+=domainResultLine[1]
@@ -582,7 +582,7 @@ def PrintDomainResult(domainResults, protocol='GFTP', nlprmax = 200, sortKey=1):
     DVread+=domainResultLine[6]
   print('---------------------------------------------------------------------------------+-------------------------------')
   if Duration <= 0.:
-    print 'Error, Duration 0 for ' + protocol
+    print('Error, Duration 0 for ' + protocol)
     Duration = 1e-6
   print(format('Sum '+ protocol +':', -35) + format("%12.3f" % Datavolume, -15) + format(TransferNumber, -15) + format("%12.0f" % (Duration/1000), -15)  + format("%10.3f" % ( Datavolume*1e9/Duration ), -15)  +' |'+ format("%12.3f" % DVwrite, -15) + format("%12.3f" % DVread, -15))
   print('=================================================================================+===============================')
@@ -665,7 +665,7 @@ def PrintFileResult( results, nfmin=50, sortKey=2 ):
       cumsumvul += sumvul[i]
       cumsumvs += sumvs[i]
       cumsumvsu += sumvsu[i]
-      print "Files read <=%5d times: %5d %7.0f  %7.0f  %7.0f  %7.0f  %7.0f  %7.0f  %7.0f  %7.0f  %7.0f" % ( nfmax[i], sumn[i], sumv[i], sumvu[i], cumsumvu, sumvul[i], cumsumvul, sumvs[i],cumsumvs,sumvsu[i],cumsumvsu)
+      print("Files read <=%5d times: %5d %7.0f  %7.0f  %7.0f  %7.0f  %7.0f  %7.0f  %7.0f  %7.0f  %7.0f" % ( nfmax[i], sumn[i], sumv[i], sumvu[i], cumsumvu, sumvul[i], cumsumvul, sumvs[i],cumsumvs,sumvsu[i],cumsumvsu))
 
 
 
@@ -679,13 +679,13 @@ def PrintSumPerHour( datavolumeListDetail, transferTimeListDetail ):
         hour = int(transferTimeListDetail[i].split(':')[0])
         arr[hour] += datavolumeListDetail[i]
     except:
-      print 'PrintSumPerHour trouble', i, transferTimeListDetail[i]
+      print('PrintSumPerHour trouble', i, transferTimeListDetail[i])
 
-  print '### Transfer per hour :'
+  print('### Transfer per hour :')
   for i in range(len(arr)):
-    print "%5d   %10.0f" % (i, arr[i])
+    print("%5d   %10.0f" % (i, arr[i]))
 
-  print ' '
+  print(' ')
     
 def decodeRmLine( line ):
   'handle remove entries'
@@ -702,8 +702,8 @@ def decodeRmLine( line ):
     fname = finfo[1]
     pnfsid = finfo[0]
     rmobj = RmSum( host, volume, mtime, fname, None, pnfsid )
-  except Exception, x:
-    print  "Troubles in decodeRmLine ", x.__class__.__name__ , ':', x, line
+  except Exception as x:
+    print("Troubles in decodeRmLine ", x.__class__.__name__ , ':', x, line)
     rmobj = None
   return rmobj
 
@@ -726,8 +726,8 @@ def decodeP2PLine( line ):
     mtime = p2pinfo[0].split()[1]
 
     trobj = TrSum( 'P2P', host, volume, None, 0, mtime, None )
-  except Exception, x:
-    print  "Troubles in decodeP2PLine ", x.__class__.__name__ , ':', x, line
+  except Exception as x:
+    print("Troubles in decodeP2PLine ", x.__class__.__name__ , ':', x, line)
     trobj = None
   return trobj
 
@@ -740,7 +740,7 @@ def fileOpen( filename ):
   elif os.path.exists(filenamegz):
     f=gzip.open(filenamegz)
   else:
-    print ("ERROR: File "+filename+" does not exist")
+    print("ERROR: File "+filename+" does not exist")
     f=None
 
   return f
@@ -748,17 +748,17 @@ def fileOpen( filename ):
 
 def getTrObjs( filelist, protocol = None ):
   """
-  read transfer objects from cPickle file
-  first uncompressing and then doing cPickle.load from uncompressed file is much faster than
+  read transfer objects from pickle file
+  first uncompressing and then doing pickle.load from uncompressed file is much faster than
   doing it from compressed file (3 s vs 30 s)
-  Also cPickle from uncompressed String is much slower, probably some CIO magic ...
+  Also pickle from uncompressed String is much slower, probably some CIO magic ...
   """
 
   spid = str(os.getpid)
 
   for fname in filelist:
 
-    print 'open file ', fname
+    print('open file ', fname)
 
 
     try:
@@ -768,7 +768,7 @@ def getTrObjs( filelist, protocol = None ):
         fil=open( fname, 'rb' )
 
       bytes = fil.read()
-      print len(bytes)
+      print(len(bytes))
       fil.close()
 
       tmpfile = '/tmp/babbaluba.'+spid
@@ -780,37 +780,37 @@ def getTrObjs( filelist, protocol = None ):
       
       while True:
         try:
-          obj = cPickle.load(fo)
+          obj = pickle.load(fo)
           if protocol != None: 
             if protocol == 'LOCAL':
               while obj.proto == 'GFTP': # skip GFTP
-                obj = cPickle.load(fo)
+                obj = pickle.load(fo)
             else:
               while obj.proto != protocol:
-                obj = cPickle.load(fo)
+                obj = pickle.load(fo)
 
           yield obj
-#          yield cPickle.load(fil)
+#          yield pickle.load(fil)
         except EOFError: break
       fo.close()
       os.unlink(tmpfile)
 #      fil.close()
-    except Exception, x:
-      print  "getTrObjs Troubles: ", x.__class__.__name__ , ':', x
+    except Exception as x:
+      print("getTrObjs Troubles: ", x.__class__.__name__ , ':', x)
      
 def getReqTrObjs( filelist, protocol = None ):
   """
-  read request/transfer objects from cPickle-error file
-  first uncompressing and then doing cPickle.load from uncompressed file is much faster than
+  read request/transfer objects from pickle-error file
+  first uncompressing and then doing pickle.load from uncompressed file is much faster than
   doing it from compressed file (3 s vs 30 s)
-  Also cPickle from uncompressed String is much slower, probably some CIO magic ...
+  Also pickle from uncompressed String is much slower, probably some CIO magic ...
   """
 
   spid = str(os.getpid)
 
   for fname in filelist:
 
-    print 'open file ', fname
+    print('open file ', fname)
 
 
     try:
@@ -820,7 +820,7 @@ def getReqTrObjs( filelist, protocol = None ):
         fil=open( fname, 'rb' )
 
       bytes = fil.read()
-#      print len(bytes)
+#      print(len(bytes))
       fil.close()
 
       tmpfile = '/tmp/babbaluba.'+spid
@@ -832,36 +832,36 @@ def getReqTrObjs( filelist, protocol = None ):
       
       while True:
         try:
-          obj = cPickle.load(fo)
+          obj = pickle.load(fo)
           yield obj
-#          yield cPickle.load(fil)
+#          yield pickle.load(fil)
         except EOFError: break
       fo.close()
       os.unlink(tmpfile)
 #      fil.close()
-    except Exception, x:
-      print  "getTrObjs Troubles: ", x.__class__.__name__ , ':', x
+    except Exception as x:
+      print("getTrObjs Troubles: ", x.__class__.__name__ , ':', x)
      
 def storeHostDict( hdict, dirname ):
-  """store host dict in cPickle file"""
+  """store host dict in pickle file"""
   fname = dirname+'/'+'hostDict.cpickle.gz'
   try:
     fil=gzip.open(fname, 'wb' )
-    cPickle.dump( hdict, fil, protocol=2 )
+    pickle.dump( hdict, fil, protocol=2 )
     fil.close()
-    print "Stored host dict with ", len(hdict), " Entries "
-  except Exception, x:
-    print  "storeHostDict Troubles: ", x.__class__.__name__ , ':', x
+    print("Stored host dict with ", len(hdict), " Entries ")
+  except Exception as x:
+    print("storeHostDict Troubles: ", x.__class__.__name__ , ':', x)
 
 def getHostDict( dirname ):
-  """get host dict from cPickle file"""
+  """get host dict from pickle file"""
   fname = dirname+'/'+'hostDict.cpickle.gz'
   try:
     fil=gzip.open(fname, 'rb' )
-    hdict = cPickle.load( fil )
+    hdict = pickle.load( fil )
     fil.close()
-    print "Read host dict with ", len(hdict), " Entries "
+    print("Read host dict with ", len(hdict), " Entries ")
     return hdict
-  except Exception, x:
-    print  "getHostDict Troubles: ", x.__class__.__name__ , ':', x
+  except Exception as x:
+    print("getHostDict Troubles: ", x.__class__.__name__ , ':', x)
     return None

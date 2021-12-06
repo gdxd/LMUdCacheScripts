@@ -6,12 +6,12 @@
 
 
 
-import sys, os, glob, datetime, time, gzip, cPickle
+import sys, os, glob, datetime, time, gzip, pickle
 import simpleTiming
 from optparse import OptionParser
 
 from dCacheTransferParseUtil import *
-from StringIO import StringIO
+from io import StringIO
 
 def setupParser():
 
@@ -49,7 +49,7 @@ if __name__ == "__main__" :
 
     summaries = options.summary.split(',')
 
-    print summaries
+    print(summaries)
     
     if options.month!='empty':
       monthEntry=options.month.split('-')
@@ -103,7 +103,7 @@ if __name__ == "__main__" :
      if os.access( filename, os.R_OK ):
        flist.append(filename)
      else:
-       print 'trouble accessing ', filename
+       print('trouble accessing ', filename)
        sys.exit("Give up ...")
 
   # end day loop

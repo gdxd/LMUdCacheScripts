@@ -6,12 +6,12 @@
 
 
 
-import sys, os, glob, datetime, time, gzip, cPickle, math
+import sys, os, glob, datetime, time, gzip, pickle, math
 import simpleTiming
 from optparse import OptionParser
 
 from dCacheTransferParseUtil import *
-from StringIO import StringIO
+from io import StringIO
 
 from ROOT import *
 
