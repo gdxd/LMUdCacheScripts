@@ -22,7 +22,7 @@
 
 
 
-import os, glob, datetime, time, gzip, cPickle
+import os, glob, datetime, time, gzip, pickle
 import simpleTiming
 from optparse import OptionParser
 
@@ -452,12 +452,12 @@ def countAccesbyFile( trslist ):
   return(domainResList)
 
 def storeTrObjs( trsumList, dirname, datestr ):
-  """store transfer objects in cPickle file"""
+  """store transfer objects in pickle file"""
   fname = 'dctr-'+datestr+'.cpickle.gz'
   try:
     fil=gzip.open(dirname+'/'+fname, 'wb' )
     for obj in trsumList:
-      cPickle.dump( obj, fil, protocol=2 )
+      pickle.dump( obj, fil, protocol=2 )
 
     fil.close()
   except Exception, x:
@@ -795,7 +795,7 @@ if __name__ == "__main__" :
 
     if options.pickleOutDir != None:
       storeTrObjs( trsumList, options.pickleOutDir, str(dateDayToProcess) )
-      print(format('Time for storing w/ cPickle: ', 65) + format(mytimer.getdiff(), -12))
+      print(format('Time for storing w/ pickle: ', 65) + format(mytimer.getdiff(), -12))
 
 
 

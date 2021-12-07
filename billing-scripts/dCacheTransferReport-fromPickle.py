@@ -6,12 +6,12 @@
 
 
 
-import sys, os, glob, datetime, time, gzip, cPickle
+import sys, os, glob, datetime, time, gzip, pickle
 import simpleTiming
 from optparse import OptionParser
 
 from dCacheTransferParseUtil import *
-from StringIO import StringIO
+from io import StringIO
 
 def setupParser():
 
@@ -49,7 +49,7 @@ if __name__ == "__main__" :
 
     summaries = options.summary.split(',')
 
-    print summaries
+    print(summaries)
     
     if options.month!='empty':
       monthEntry=options.month.split('-')
@@ -103,7 +103,7 @@ if __name__ == "__main__" :
      if os.access( filename, os.R_OK ):
        flist.append(filename)
      else:
-       print 'trouble accessing ', filename
+       print('trouble accessing ', filename)
        sys.exit("Give up ...")
 
      # daily summary
@@ -130,12 +130,12 @@ if __name__ == "__main__" :
   # end day loop
 
   if 'byday' in summaries and 'byprotocol' in summaries:
-    print '###, day, DCAP-tot, DCAP-n, GFTP-tot, GFTP-w, GFTP-n'
+    print('###, day, DCAP-tot, DCAP-n, GFTP-tot, GFTP-w, GFTP-n')
     for k in sorted(daydicts.keys()):
       if k.find('byprotocol')>0 :
         v = daydicts[k]
         d = k.split('_')[0]
-        print '###, %s, %10.1f, %8d, %10.1f, %10.1f, %8d' %(d, v['DCAP'].volume/1024,v['DCAP'].number,v['GFTP'].volume/1024,v['GFTP'].writevolume/1024,v['GFTP'].number)
+        print('###, %s, %10.1f, %8d, %10.1f, %10.1f, %8d' %(d, v['DCAP'].volume/1024,v['DCAP'].number,v['GFTP'].volume/1024,v['GFTP'].writevolume/1024,v['GFTP'].number))
 
 
 
@@ -148,7 +148,7 @@ if __name__ == "__main__" :
       
       results, resultsdict = getSumbyTag( tag, getTrObjs( flist, protocol ) )
       if debug>1 :
-        print ' getSumbyTag :' + tag + '   ', resultsdict.keys()
+        print(' getSumbyTag :' + tag + '   ', resultsdict.keys())
         
       print('+++++++++++++++ summary for '+dateStart.strftime('%Y-%m-%d')+' to '+dateEnd.strftime('%Y-%m-%d') +' [sorted by Datavolume] +++++++++++++++')
       if tag == 'byfile':
