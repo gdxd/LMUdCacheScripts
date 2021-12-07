@@ -20,19 +20,19 @@ cd /root/dCache/billing-scripts
 BDIR=/var/lib/dcache/billing
 fname=`/bin/mktemp`
 echo '########## Transfer Reports   ######################' > $fname
-python dCacheTransfer-genPickle.py -f $BDIR -o BILLINGDIR $dayopts >> $fname
-# python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S byprotocol >> $fname
-# python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p gftp >> $fname
-# python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain,bypool,byspacetoken,bydstag -p local  >> $fname
-python dCacheTransferReport-fromPickle.py -i BILLINGDIR $dayopts >> $fname
-python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p FTP.GSI $dayopts >> $fname
-#python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p DCAP.PLAIN $dayopts >> $fname
-python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p XROOTD $dayopts >> $fname
-python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p WEBDAV.TLS $dayopts >> $fname
-python dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p REMOTETRANSFERMANAG $dayopts >> $fname
+python3 dCacheTransfer-genPickle.py -f $BDIR -o BILLINGDIR $dayopts >> $fname
+# python3 dCacheTransferReport-fromPickle.py -i BILLINGDIR -S byprotocol >> $fname
+# python3 dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p gftp >> $fname
+# python3 dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain,bypool,byspacetoken,bydstag -p local  >> $fname
+python3 dCacheTransferReport-fromPickle.py -i BILLINGDIR $dayopts >> $fname
+python3 dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p FTP.GSI $dayopts >> $fname
+#python3 dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p DCAP.PLAIN $dayopts >> $fname
+python3 dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p XROOTD $dayopts >> $fname
+python3 dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p WEBDAV.TLS $dayopts >> $fname
+python3 dCacheTransferReport-fromPickle.py -i BILLINGDIR -S bydomain -p REMOTETRANSFERMANAG $dayopts >> $fname
 
 echo '\n\n##########   Error  Reports   ######################' >> $fname
-python dCacheTransferErrorReport-fromPickle.py  -i BILLINGDIR $dayopts >> $fname
+python3 dCacheTransferErrorReport-fromPickle.py  -i BILLINGDIR $dayopts >> $fname
 #
 datestring=`/bin/date -d $day +'%F'`
 
