@@ -81,7 +81,7 @@ class Admin:
   def write (self, text):
     time.sleep(self.delay)
     len_text = len(text) 
-    assert os.write(self.child, text)  == len_text
+    assert os.write(self.child, text.encode())  == len_text
 
   def make_connection( self, info ):
     ssh_args = ssh_extra_args + [str(info['AdminHost'])]
