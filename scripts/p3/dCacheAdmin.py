@@ -58,7 +58,7 @@ class Admin:
 
   def read (self, max_read):
     time.sleep(self.delay)
-    return os.read(self.child, max_read)
+    return os.read(self.child, max_read).decode()
 
   def readlines( self, matches=[] ):
     time.sleep( self.delay )
@@ -72,7 +72,7 @@ class Admin:
         for regexp in re_matches:
             if regexp.search( read_line ):
                 stop_flag = True
-        read_char = os.read( self.child, 1 )
+        read_char = os.read( self.child, 1 ).decode()
         read_line += read_char
       if ADEBUG: print(str(read_line), "done")
       yield str(read_line)
