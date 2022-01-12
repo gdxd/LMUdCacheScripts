@@ -70,7 +70,7 @@ def pname2num( pool ):
 def checkLoadOk( pool, load ):
 
     if load < 0 : 
-#	return True  # GD hack
+        # return True  # GD hack
         return False
 
     pnum = pname2num( pool )
@@ -137,9 +137,9 @@ def main():
 #                nmovernew = max( qp.active + qp.queued, NMOVERDEF )
                 nmovernew = max( qp.maxactive - 5, NMOVERDEF )
                 plreset[ptag] = nmovernew
-	elif qp.maxactive < NMOVERDEF:
+        elif qp.maxactive < NMOVERDEF:
             if checkLoadOk(pool, getPoolLoad( pool )) :
-	        plreset[ptag] = NMOVERDEF
+                plreset[ptag] = NMOVERDEF
 
         # increase movers if queued movers
         if qp.queued>0 and qp.active + qp.queued > qp.maxactive and qp.maxactive < NMOVERMAX:

@@ -40,7 +40,7 @@ def lookup_stuck_movers( a, pool, tmin = 1000, maxsz = 0 ):
 
 def kill_ids( a, pool, ids ):
     for sid in ids:
-	id = sid.split(':')[0]
+        id = sid.split(':')[0]
         a.execute( pool, 'mover kill ', [id] )
 
 
