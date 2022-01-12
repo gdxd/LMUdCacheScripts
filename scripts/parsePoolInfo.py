@@ -27,7 +27,7 @@ class QPar(object):
             pass
 
 
-        if DEBUG>0: print "QPar:", self.maxactive, self.active, self.queued, qinfo
+        if DEBUG>0: print("QPar:", self.maxactive, self.active, self.queued, qinfo)
 
 
     pass
@@ -66,14 +66,14 @@ class PoolHandler(ContentHandler):
         if self.inQueue and self.inMetric:
             self.qinfo[str(self.aname)] = int(characters)
 
-            if DEBUG>0: print self.pname, self.qname, self.aname, characters
+            if DEBUG>0: print(self.pname, self.qname, self.aname, characters)
             
             # print self.name, characters
 
     def endElement(self, name):
         if self.inQueue and name == "queue":
             tag = self.pname +":"+self.qname
-            if DEBUG>0: print self.pname, self.qname, self.aname, self.qinfo
+            if DEBUG>0: print(self.pname, self.qname, self.aname, self.qinfo)
 
             self.pinfo[tag] = QPar( self.qinfo )
             self.inQueue = False
@@ -89,7 +89,7 @@ class PoolHandler(ContentHandler):
 import sys
 from xml.sax import make_parser
 # from simplehandler import ArticleHandler
-from urllib import urlopen
+from urllib.request import urlopen
 
 def doParse( url, myqueue=None ):
     global proto
@@ -111,7 +111,7 @@ def doParse( url, myqueue=None ):
 
 
 if __name__ == '__main__':
-    print sys.argv
+    print(sys.argv)
     if len(sys.argv)>1:
         chkqueue = sys.argv[1]
     else:
@@ -121,6 +121,6 @@ if __name__ == '__main__':
 
     for ptag in sorted(poolinfo.keys()):
         qp =  poolinfo[ptag]
-        print ptag, qp.maxactive, qp.active, qp.queued
+        print(ptag, qp.maxactive, qp.active, qp.queued)
 
 

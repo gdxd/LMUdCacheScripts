@@ -1,6 +1,6 @@
 
 #!/usr/bin/env python
-import sys, os, re, pty, time, resource, ConfigParser
+import sys, os, re, pty, time, resource, configparser
 
 ssh_extra_args = []
 # ssh_extra_args = ['-1']
@@ -12,7 +12,7 @@ ADEBUG=False
 class Admin:
 
   def __init__( self, info ):
-    if isinstance(info, ConfigParser.ConfigParser):
+    if isinstance(info, configparser.ConfigParser):
         config_file = info.get("dCacheAdmin","config_file")
         if str(config_file) == 'None':
             config_file = None
@@ -30,7 +30,7 @@ class Admin:
 
   # GD
   def __del__( self ):
-    print "Admin destructor called"
+    print("Admin destructor called")
     try:
       self.logoff()
       time.sleep( 0.1)
@@ -52,13 +52,13 @@ class Admin:
           pass
       try:
         os.execvp( '/usr/bin/ssh', ['ssh'] + args )
-      except Exception, e:
-        print e
-        print "Unable to execute ssh"
+      except Exception as e:
+        print(e)
+        print("Unable to execute ssh")
 
   def read (self, max_read):
     time.sleep(self.delay)
-    return os.read(self.child, max_read)
+    return os.read(self.child, max_read).decode()
 
   def readlines( self, matches=[] ):
     time.sleep( self.delay )
@@ -72,16 +72,16 @@ class Admin:
         for regexp in re_matches:
             if regexp.search( read_line ):
                 stop_flag = True
-        read_char = os.read( self.child, 1 )
+        read_char = os.read( self.child, 1 ).decode()
         read_line += read_char
-      if ADEBUG: print str(read_line), "done"
+      if ADEBUG: print(str(read_line), "done")
       yield str(read_line)
     return
 
   def write (self, text):
     time.sleep(self.delay)
     len_text = len(text) 
-    assert os.write(self.child, text)  == len_text
+    assert os.write(self.child, text.encode())  == len_text
 
   def make_connection( self, info ):
     ssh_args = ssh_extra_args + [str(info['AdminHost'])]
@@ -131,7 +131,7 @@ class Admin:
     if cell != None:
       cmd = 'cd ' + str(cell) + '\n'
       cmd = '\\c ' + str(cell) + '\n'
-      if ADEBUG: print cmd
+      if ADEBUG: print(cmd)
       self.write(cmd)
       for line in self.readlines(matches=['\\(%s@.* >' % cell,'\\(%s\\) [\\w]* >' % cell,'\\([\\w]*\\) /*%s >' % cell]):
         if re.search( '>', line ):
@@ -232,7 +232,7 @@ def parse_DBParam( filename=None, section=None, interface=None ):
     #print "Using DBParam file at %s" % filename
   try:
     file = open( filename, 'r' )
-  except Exception, e:
+  except Exception as e:
     raise Exception( "Unable to open specified DBParam file %s\nCheck the " \
                      "path and the permissions.  \nInitial exception: %s" % \
                      (filename,str(e)) )

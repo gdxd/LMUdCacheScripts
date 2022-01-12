@@ -15,11 +15,11 @@ def check_pool_movers( pool, nmover, queue ):
     # LRZ specific 
     pref='lcg-lrz-dc'
     if pool.index(pref) != 0 :
-        print 'check_pool_movers invalid pool name ', pool
+        print('check_pool_movers invalid pool name ', pool)
         return False
 
     if nmover<minmover or nmover>maxmover:
-        print 'check_pool_movers nmover outside range: ', nmover, minmover, maxmover
+        print('check_pool_movers nmover outside range: ', nmover, minmover, maxmover)
         return False
     
     return True
@@ -32,20 +32,20 @@ def set_movers( a, pool, nmover, queue, test=False ):
         command = 'mover set max active %d -queue=%s' % ( nmover, queue )
         
         if test :
-            print "set_movers test-mode: ", pool, command
+            print("set_movers test-mode: ", pool, command)
         else:
-            print "set_movers execute: ", pool, command
+            print("set_movers execute: ", pool, command)
             results = a.execute( pool, command )
 
     else:
-        print "set_movers: outside range, no action for ", pool, nmover, queue
+        print("set_movers: outside range, no action for ", pool, nmover, queue)
 
 
 def adjust_pools( plist, test=False ):
 
     a = setup_admin()
 
-    for ptag in plist.keys():
+    for ptag in list(plist.keys()):
         pool = ptag.split(':')[0]
         queue = ptag.split(':')[1]
         set_movers( a, pool, plist[ptag], queue, test )
@@ -61,7 +61,7 @@ def printHelp():
     The dcache_set_movers.py changes max mover settings
 
     """
-    print help
+    print(help)
 
 def setup_admin( opts={} ):
   if 'config' in opts:
@@ -78,10 +78,10 @@ def setup_admin( opts={} ):
 
   try:
       a = Admin( info )
-  except Exception, e:
-      print "The following error occurred while trying to connect to the " \
-            "admin interface:"
-      print e
+  except Exception as e:
+      print("The following error occurred while trying to connect to the " \
+            "admin interface:")
+      print(e)
       sys.exit(3)
 
   return a

@@ -34,20 +34,20 @@ def lookup_stuck_movers( a, pool, tmin = 1000, maxsz = 0 ):
                 if (maxsz<0 or nbytes <= maxsz) and time>tmin:
                     stuck_ids.append( line )
             except:
-                print 'Parsing trouble: ', line
+                print('Parsing trouble: ', line)
                 pass
     return stuck_ids
 
 def kill_ids( a, pool, ids ):
     for sid in ids:
-	id = sid.split(':')[0]
+        id = sid.split(':')[0]
         a.execute( pool, 'mover kill ', [id] )
 
 
 def print_ids( ids ):
-    print "Movers to be killed:"
+    print("Movers to be killed:")
     for id in ids:
-        print " * %s" % id
+        print(" * %s" % id)
 
 def printHelp():
     help = """
@@ -63,7 +63,7 @@ def printHelp():
       -k                            actually kill transfers (default print only)
 
     """
-    print help
+    print(help)
 
 if __name__ == '__main__':
   kwOpts, passedOpts, givenOpts = parseOpts( sys.argv[1:] )
@@ -102,10 +102,10 @@ if __name__ == '__main__':
 
   try:
       a = Admin( info )
-  except Exception, e:
-      print "The following error occurred while trying to connect to the " \
-            "admin interface:"
-      print e
+  except Exception as e:
+      print("The following error occurred while trying to connect to the " \
+            "admin interface:")
+      print(e)
       sys.exit(3)
 
   stuck_ids = lookup_stuck_movers( a, pool, tmin, maxsz )

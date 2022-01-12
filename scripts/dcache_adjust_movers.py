@@ -2,7 +2,7 @@
 
 #GD 14/06/11: fixed fail_ids() 
 
-import sys, time, os, re, commands
+import sys, time, os, re, subprocess
 
 
 
@@ -34,7 +34,7 @@ POOLLOAD = {}
 #
 def getPoolLoad( pool ):
     # pool = lcg-lrz-dc25_2 --> lcg-lrz-dc25.grid.lrz-muenchen.de
-    if POOLLOAD.has_key(pool) :
+    if pool in POOLLOAD :
         return POOLLOAD[pool]
 
     load = -1
@@ -42,7 +42,7 @@ def getPoolLoad( pool ):
     phost = pool.split('_')[0] + '.' + domain
     
 
-    s,o = commands.getstatusoutput("ssh " + phost + "  uptime ")
+    s,o = subprocess.getstatusoutput("ssh " + phost + "  uptime ")
     # '  7:14pm  up 92 days  0:55,  0 users,  load average: 11.19, 10.66, 7.97'
 
     if s == 0:
@@ -70,7 +70,7 @@ def pname2num( pool ):
 def checkLoadOk( pool, load ):
 
     if load < 0 : 
-#	return True  # GD hack
+        # return True  # GD hack
         return False
 
     pnum = pname2num( pool )
@@ -118,10 +118,10 @@ def main():
         pool = ptag.split(':')[0]
 
         if poolIgnore( pool ) : 
-            if DEBUG: print 'Pool ignored : ', ptag
+            if DEBUG: print('Pool ignored : ', ptag)
             continue
 
-        if DEBUG: print ptag, qp.maxactive, qp.active, qp.queued
+        if DEBUG: print(ptag, qp.maxactive, qp.active, qp.queued)
 
         nactive += qp.active
         nqueued += qp.queued
@@ -137,9 +137,9 @@ def main():
 #                nmovernew = max( qp.active + qp.queued, NMOVERDEF )
                 nmovernew = max( qp.maxactive - 5, NMOVERDEF )
                 plreset[ptag] = nmovernew
-	elif qp.maxactive < NMOVERDEF:
+        elif qp.maxactive < NMOVERDEF:
             if checkLoadOk(pool, getPoolLoad( pool )) :
-	        plreset[ptag] = NMOVERDEF
+                plreset[ptag] = NMOVERDEF
 
         # increase movers if queued movers
         if qp.queued>0 and qp.active + qp.queued > qp.maxactive and qp.maxactive < NMOVERMAX:
@@ -149,21 +149,21 @@ def main():
                 nmovernew = min( qp.maxactive + 10, NMOVERMAX )
                 pladjust[ptag] = nmovernew
             else:
-                print "Not increasing movers on %s %d , too high load %f" % ( pool,  qp.maxactive, pload )
+                print("Not increasing movers on %s %d , too high load %f" % ( pool,  qp.maxactive, pload ))
 
-    print 'adjust_movers: In total %d active movers and %d queued' % ( nactive, nqueued )
+    print('adjust_movers: In total %d active movers and %d queued' % ( nactive, nqueued ))
 
 
     if len(plreset) == 0 and len(pladjust) == 0:
-        print 'adjust_movers: no action'
+        print('adjust_movers: no action')
 
     else:
         if len(plreset) > 0:
-            print 'adjust_movers: reducing movers for ', len(plreset), ' pools '
+            print('adjust_movers: reducing movers for ', len(plreset), ' pools ')
             dcache_set_movers.adjust_pools( plreset )
 
         if len(pladjust) > 0:
-            print 'adjust_movers: increasing movers for ', len(pladjust), ' pools '
+            print('adjust_movers: increasing movers for ', len(pladjust), ' pools ')
 
             dcache_set_movers.adjust_pools( pladjust, test=False )
 
