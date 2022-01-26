@@ -21,8 +21,10 @@ infourl = "http://lcg-lrz-dcache0.grid.lrz.de:59998/info/pools"
 # up to 25 GD Apr-12, 2018
 # down to 15 GD Sep-19, 2018
 # up to 30 GD Nov-7, 2019
-NMOVERDEF = 30
-NMOVERMAX = 250
+# adjust par GD Jan-26, 2022
+NMOVERDEF = 50
+NMOVERMAX = 300
+NMOVERSTEP = 30
 
 # list of pools to exclude from adjustment0
 # POOLSIGNORE = [19,32,28,999]
@@ -133,9 +135,9 @@ def main():
         if qp.maxactive > NMOVERDEF:
             if ( not checkLoadOk(pool, getPoolLoad( pool )) ):
                 plreset[ptag] = NMOVERDEF
-            elif qp.active + qp.queued < qp.maxactive - 8:
+            elif qp.active + qp.queued < qp.maxactive - NMOVERSTEP//2 + 5:
 #                nmovernew = max( qp.active + qp.queued, NMOVERDEF )
-                nmovernew = max( qp.maxactive - 5, NMOVERDEF )
+                nmovernew = max( qp.maxactive - NMOVERSTEP//2, NMOVERDEF )
                 plreset[ptag] = nmovernew
         elif qp.maxactive < NMOVERDEF:
             if checkLoadOk(pool, getPoolLoad( pool )) :
@@ -146,7 +148,7 @@ def main():
             pload = getPoolLoad( pool )
 
             if checkLoadOk(pool, pload ):
-                nmovernew = min( qp.maxactive + 10, NMOVERMAX )
+                nmovernew = min( qp.maxactive + NMOVERSTEP, NMOVERMAX )
                 pladjust[ptag] = nmovernew
             else:
                 print("Not increasing movers on %s %d , too high load %f" % ( pool,  qp.maxactive, pload ))
