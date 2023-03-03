@@ -350,7 +350,7 @@ def getSumbyPool( trslist, bynode = False ):
   return(domainResList)
 
 def getSumbySpaceToken( trslist ):
-  "sum tranfer info by protocol"
+  "sum transfer info by protocol"
 
   domainResults={}
   
@@ -359,7 +359,7 @@ def getSumbySpaceToken( trslist ):
 
     try:
       spacetoken = ts.fname.strip('/').split('/')[5]
-      if spacetoken.find('atlas')<0 : # skip non-atlas entries
+      if spacetoken.find('atlas')<0 and spacetoken.find('belle')<0  : # skip non-atlas / non-belle entries
         continue
     except Exception, x:
 #      print  "Troubles: ", x.__class__.__name__ , ':', x

@@ -22,7 +22,8 @@ infourl = "http://lcg-lrz-dcache0.grid.lrz.de:59998/info/pools"
 # down to 15 GD Sep-19, 2018
 # up to 30 GD Nov-7, 2019
 # adjust par GD Jan-26, 2022
-NMOVERDEF = 50
+# up to 100 GD Oct 26, 2022
+NMOVERDEF = 100
 NMOVERMAX = 300
 NMOVERSTEP = 30
 
