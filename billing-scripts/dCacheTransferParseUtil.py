@@ -360,7 +360,7 @@ def getSumbyTag( tag, ititem, bynode = True ):
 
         try:
             key = ts.fname.strip('/').split('/')[5]
-            if key.find('atlas')<0 : # skip non-atlas entries
+            if key.find('atlas')<0 and key.find('belle')<0 : # skip non-atlas/belle entries
                 continue
         except Exception as x:
             #      print("Troubles: ", x.__class__.__name__ , ':', x)
@@ -371,7 +371,7 @@ def getSumbyTag( tag, ititem, bynode = True ):
 
         try:
             spacetoken = ts.fname.strip('/').split('/')[5]
-            if spacetoken.find('atlas')<0 : # skip non-atlas entries
+            if spacetoken.find('atlas')<0 and key.find('belle')<0  : # skip non-atlas/belle entries
                 continue
         except Exception as x:
             #      print("Troubles: ", x.__class__.__name__ , ':', x)
@@ -385,7 +385,7 @@ def getSumbyTag( tag, ititem, bynode = True ):
         try:
             fnparts = ts.fname.strip('/').split('/')
             fn = fnparts[5]
-            if fn.find('atlasdatadisk')<0 and  fn.find('atlaslocalgroupdisk')<0 and  fn.find('atlasgroupdisk')<0   : # only these spacetokens
+            if fn.find('atlasdatadisk')<0 and  fn.find('atlaslocalgroupdisk')<0 and  fn.find('atlasgroupdisk')<0 and  fn.find('localgroupdisk')<0  : # only these spacetokens
                 continue
             # extract ds-name
             key = fnparts[-2]
@@ -399,7 +399,7 @@ def getSumbyTag( tag, ititem, bynode = True ):
         try:
             fnparts = ts.fname.strip('/').split('/')
             fn = fnparts[5]
-            if fn.find('atlasdatadisk')<0 and  fn.find('atlaslocalgroupdisk')<0 and  fn.find('atlasgroupdisk')<0   : # only these spacetokens
+            if fn.find('atlasdatadisk')<0 and  fn.find('atlaslocalgroupdisk')<0 and  fn.find('atlasgroupdisk')<0 and  fn.find('localgroupdisk')<0   : # only these spacetokens
                 continue
             # extract ds-name tags
             dstags = fnparts[-2].split('.')
